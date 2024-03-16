@@ -4,7 +4,7 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author Adrian Zamora Sanchez
+ * @author Adrián Zamora Sánchez
  * @author Jon Ander Incera Moreno
  */
 
