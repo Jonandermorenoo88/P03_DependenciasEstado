@@ -23,11 +23,12 @@ public class Parque implements IParque {
 	}
 
 	protected void checkInvariante() {
-		assert sumarContadoresPuerta() == contadorPersonasTotales : "INV: La suma de contadores de las puertas debe ser igual al valor del contador del parte";
+		assert sumarContadoresPuerta() == contadorPersonasTotales
+				: "INV: La suma de contadores de las puertas debe ser igual al valor del contador del parte";
 		assert contadorPersonasTotales <= aforo : "INV: El número de personas supera el aforo máximo permitido";
 		assert contadorPersonasTotales >= 0 : "INV: No pueden salir personas si está vacío el parque";
 	}
-	
+
 	private void imprimirInfo(String puerta, String movimiento) {
 		System.out.println(movimiento + " por puerta " + puerta);
 		System.out.println("--> Personas en el parque " + contadorPersonasTotales);
@@ -36,7 +37,7 @@ public class Parque implements IParque {
 		}
 		System.out.println(" ");
 	}
-	
+
 	private int sumarContadoresPuerta() {
 		int sumaContadoresPuerta = 0;
 		Enumeration<Integer> iterPuertas = contadoresPersonasPuerta.elements();
@@ -45,7 +46,7 @@ public class Parque implements IParque {
 		}
 		return sumaContadoresPuerta;
 	}
-	
+
 	/**
 	 * Método synchronized que permite a una persona entrar al parque por una puerta
 	 * determinada.
@@ -80,12 +81,6 @@ public class Parque implements IParque {
 
 	}
 
-	@Override
-	public void salirDelParque(String puerta) {
-		// TODO Auto-generated method stub
-
-	}
-
 	/**
 	 * Método sincronizado para comprobar si el parque está lleno antes de permitir
 	 * que una persona entre. El método espera mientras el parque está lleno y
@@ -95,6 +90,54 @@ public class Parque implements IParque {
 	protected synchronized void comprobarAntesDeEntrar() {
 		// Se mantiene a la espera comprobando si el parque está lleno.
 		if (contadorPersonasTotales == aforo) {
+			try {
+				wait(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	/**
+	 * Método que permite a una persona salir del parque a través de una puerta
+	 * especificada.
+	 */
+	@Override
+	public void salirDelParque(String puerta) {
+		// TODO Auto-generated method stub
+		// En caso de que no haya salidas por esa puerta, la inicializamos
+		if (contadoresPersonasPuerta.get(puerta) == null) {
+			contadoresPersonasPuerta.put(puerta, 0);
+		}
+
+		// Llamamos a la postcondición.
+		comprobarAntesDeSalir(puerta);
+
+		// Decrementamos el contador total de la gente que está en el parque y el de la
+		// puerta
+		contadorPersonasTotales--;
+		contadoresPersonasPuerta.put(puerta, contadoresPersonasPuerta.get(puerta) - 1);
+
+		// Imprimimos el estado actual del parque
+		imprimirInfo(puerta, "Salida");
+
+		// Se comprueba el invariante
+		checkInvariante();
+
+		// Avisamos al resto de hilos que están a la espera de que hemos liberado el
+		// recurso
+		notifyAll();
+
+	}
+
+	/**
+	 * Método que mantiene al hilo a la espera de que se cumpla la postcondición
+	 * antes de salir del parque. Se mantiene a la espera comprobando si el parque
+	 * está vacío
+	 * 
+	 */
+	protected synchronized void comprobarAntesDeSalir(String puerta) {
+		if (contadorPersonasTotales == 0) {
 			try {
 				wait(1000);
 			} catch (InterruptedException e) {
