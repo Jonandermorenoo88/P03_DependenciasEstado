@@ -1,5 +1,6 @@
 package p03.c01;
 
+import java.util.Enumeration;
 import java.util.Hashtable;
 
 public class Parque implements IParque {
@@ -21,6 +22,30 @@ public class Parque implements IParque {
 		aforo = 50;
 	}
 
+	protected void checkInvariante() {
+		assert sumarContadoresPuerta() == contadorPersonasTotales : "INV: La suma de contadores de las puertas debe ser igual al valor del contador del parte";
+		assert contadorPersonasTotales <= aforo : "INV: El número de personas supera el aforo máximo permitido";
+		assert contadorPersonasTotales >= 0 : "INV: No pueden salir personas si está vacío el parque";
+	}
+	
+	private void imprimirInfo(String puerta, String movimiento) {
+		System.out.println(movimiento + " por puerta " + puerta);
+		System.out.println("--> Personas en el parque " + contadorPersonasTotales);
+		for (String p : contadoresPersonasPuerta.keySet()) {
+			System.out.println("----> Por puerta " + p + " " + contadoresPersonasPuerta.get(p));
+		}
+		System.out.println(" ");
+	}
+	
+	private int sumarContadoresPuerta() {
+		int sumaContadoresPuerta = 0;
+		Enumeration<Integer> iterPuertas = contadoresPersonasPuerta.elements();
+		while (iterPuertas.hasMoreElements()) {
+			sumaContadoresPuerta += iterPuertas.nextElement();
+		}
+		return sumaContadoresPuerta;
+	}
+	
 	/**
 	 * Método synchronized que permite a una persona entrar al parque por una puerta
 	 * determinada.
