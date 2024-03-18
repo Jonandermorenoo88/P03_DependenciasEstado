@@ -26,8 +26,13 @@ public class Parque implements IParque {
 	 * @param aforo el número máximo de personas permitidas en el parque
 	 */
 	public Parque() {
+		// Se inicia el contador a 0
 		contadorPersonasTotales = 0;
+		
+		// Tabla hash que contiene los datos de las puertas
 		contadoresPersonasPuerta = new Hashtable<String, Integer>();
+		
+		// Aforo máximo, se establece en 50 por defecto
 		aforo = 50;
 	}
 
@@ -36,8 +41,14 @@ public class Parque implements IParque {
 	 * que se cumplan para detectar errores de sincronización y funcionamiento
 	 */
 	protected void checkInvariante() {
-		assert sumarContadoresPuerta() == contadorPersonasTotales: "INV: La suma de contadores de las puertas debe ser igual al valor del contador del parque";
+		// Se comprueba que el sumador parcial de todas las puertas es igual al sumador del parque
+		assert sumarContadoresPuerta() == contadorPersonasTotales: 
+			"INV: La suma de contadores de las puertas debe ser igual al valor del contador del parque";
+		
+		// Se comprueba que no se supera el aforo
 		assert contadorPersonasTotales <= aforo : "INV: El número de personas supera el aforo máximo permitido";
+		
+		// Se comprueba que no se tiene aforo negativo
 		assert contadorPersonasTotales >= 0 : "INV: No pueden salir personas si está vacío el parque";
 	}
 
@@ -62,8 +73,13 @@ public class Parque implements IParque {
 	 * @return int
 	 */
 	private int sumarContadoresPuerta() {
+		// Contador
 		int sumaContadoresPuerta = 0;
+		
+		// Iterador de las puertas
 		Enumeration<Integer> iterPuertas = contadoresPersonasPuerta.elements();
+		
+		// Se suman los contadores de todas las puertas
 		while (iterPuertas.hasMoreElements()) {
 			sumaContadoresPuerta += iterPuertas.nextElement();
 		}
@@ -78,7 +94,6 @@ public class Parque implements IParque {
 	 */
 	@Override
 	public void entrarAlParque(String puerta) {
-		// TODO Auto-generated method stub
 		// En caso de que no haya entradas por esa puerta, la inicializamos
 		if (contadoresPersonasPuerta.get(puerta) == null) {
 			contadoresPersonasPuerta.put(puerta, 0);
