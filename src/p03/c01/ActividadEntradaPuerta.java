@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 public class ActividadEntradaPuerta implements Runnable {
 
-	// esto son los atributos
+	// Atributos de la clase
 	private static final int NUMENTRADAS = 20;
 	private String puerta;
 	private IParque parque;

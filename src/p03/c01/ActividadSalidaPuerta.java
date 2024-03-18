@@ -9,18 +9,18 @@ import java.util.concurrent.TimeUnit;
  * poder ser ejecutada en un hilo de ejecución.
  * 
  * 
- * @author Adrián Zamor Sánchez
+ * @author Adrián Zamora Sánchez
  * @author Jon Ander Incera Moreno
  */
 public class ActividadSalidaPuerta implements Runnable {
 
-	// estos son los atributos
+	// Atributos de la clase
 	private static final int NUMENTRADAS = 20;
 	private String puerta;
 	private IParque parque;
 
 	/**
-	 * contructor de la clase ActividadSalidaPuerta. Inicializa los atributos puerta
+	 * Contructor de la clase ActividadSalidaPuerta. Inicializa los atributos puerta
 	 * y parque con los valores especificos en los parametros.
 	 * 
 	 * @param puerta una cadena que representa la puerta por la que se realizarán
