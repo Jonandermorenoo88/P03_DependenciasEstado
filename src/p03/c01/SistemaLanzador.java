@@ -18,7 +18,7 @@ import java.util.concurrent.Executors;
 public class SistemaLanzador {
 	public static void main(String[] args) {
 		// Se instancia un nuevo adaptador sincronizado para el
-		IParque parque = AdaptadorParqueSincronizado.getInstancia();
+		IParque parque = new Parque();
 		
 		// Se declara la primera letra identificativa de las puertas
 		char letra_puerta = 'A';
@@ -34,7 +34,6 @@ public class SistemaLanzador {
 			// Se ejecuta una nueva actividad de entrada y de salida del parque
 			exec.execute(new ActividadEntradaPuerta(puerta, parque));
 			exec.execute(new ActividadSalidaPuerta(puerta, parque));
-			
 		}
 	}
 }

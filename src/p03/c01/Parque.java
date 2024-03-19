@@ -93,7 +93,7 @@ public class Parque implements IParque {
 	 * @param puerta la puerta por la cual la persona entra al parque
 	 */
 	@Override
-	public void entrarAlParque(String puerta) {
+	public synchronized void entrarAlParque(String puerta) {
 		// En caso de que no haya entradas por esa puerta, la inicializamos
 		if (contadoresPersonasPuerta.get(puerta) == null) {
 			contadoresPersonasPuerta.put(puerta, 0);
@@ -116,7 +116,6 @@ public class Parque implements IParque {
 		// Avisamos al resto de hilos que están a la espera de que hemos liberado el
 		// recurso
 		notifyAll();
-
 	}
 
 	/**
@@ -126,9 +125,9 @@ public class Parque implements IParque {
 	 */
 	protected synchronized void comprobarAntesDeEntrar() {
 		// Se mantiene a la espera comprobando si el parque está lleno.
-		if (contadorPersonasTotales == aforo) {
+		while (contadorPersonasTotales == aforo) {
 			try {
-				wait(3000);
+				wait();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -140,8 +139,7 @@ public class Parque implements IParque {
 	 * especificada.
 	 */
 	@Override
-	public void salirDelParque(String puerta) {
-		// TODO Auto-generated method stub
+	public synchronized void salirDelParque(String puerta) {
 		// En caso de que no haya salidas por esa puerta, la inicializamos
 		if (contadoresPersonasPuerta.get(puerta) == null) {
 			contadoresPersonasPuerta.put(puerta, 0);
@@ -164,7 +162,6 @@ public class Parque implements IParque {
 		// Avisamos al resto de hilos que están a la espera de que hemos liberado el
 		// recurso
 		notifyAll();
-
 	}
 
 	/**
@@ -173,9 +170,10 @@ public class Parque implements IParque {
 	 * está vacío
 	 */
 	protected synchronized void comprobarAntesDeSalir(String puerta) {
-		if (contadorPersonasTotales == 0) {
+		// Se mantiene a la espera comprobando si el parque sigue vacio. 
+		while (contadorPersonasTotales == 0) {
 			try {
-				wait(3000);
+				wait();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

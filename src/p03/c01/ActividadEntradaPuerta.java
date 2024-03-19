@@ -57,7 +57,6 @@ public class ActividadEntradaPuerta implements Runnable {
 				return;
 			}
 		}
-
 		System.out.println("Finalizada entrada por la puerta " + puerta);
 	}
 }
